@@ -1,0 +1,36 @@
+/reserva_cun
+|-- main.py             # Punto de entrada, menú principal.
+|-- models.py           # Definición de clases: Sala, Reserva, Estudiante.
+|-- database.py         # Lógica de conexión y setup de SQLite.
+|-- repositories.py     # Clases que interactúan con la DB (SalaRepository, ReservaRepository).
+|-- services.py         # Lógica de negocio (ReservaService.validar_disponibilidad).
+|-- cli.py              # Funciones para la interfaz de consola (mostrar_menu, pedir_input).
+
+
+
+1.  database.py: Esta es la capa más baja, que maneja la persistencia. Es el cimiento sobre el cual se construyen las demás capas. Conocerla primero nos da contexto sobre cómo se estructuran los datos y cómo se accede a la base de datos.
+2.  models.py: Define las entidades centrales del dominio (Sala, Reserva, Estudiante). Estas clases interactúan directamente con `database.py` y son utilizadas por `repositories.py`. Verlas después de `database.py` nos permite entender la estructura de los datos que se manejan.
+3.  repositories.py: Esta capa interactúa con `database.py` para realizar operaciones CRUD y consultas específicas sobre los `models`. Es el puente entre la base de datos y la lógica de negocio.
+4.  services.py: Contiene la lógica de negocio principal, como la validación de disponibilidad (RF8), la creación de reservas (RF3), etc. Interactúa con `repositories.py` y `models.py`. Es el corazón del comportamiento del sistema.
+5.  cli.py: Maneja la interacción con el usuario, mostrando menús, solicitando entradas y llamando a `services` o `repositories` según sea necesario. Es la capa más externa.
+6.  main.py: El punto de entrada del programa. Coordina las demás capas, inicializa componentes (como servicios o la interfaz CLI) y controla el flujo general de la aplicación.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
