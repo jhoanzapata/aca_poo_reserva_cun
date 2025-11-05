@@ -4,22 +4,16 @@ from services import ReservaService, SalaService, EstudianteService
 from cli import CLIHandler
 import sys
 import traceback
+from datetime import datetime
 
 
 def inicializar_servicios():
-    """Inicializa y configura todos los servicios con inyección de dependencias"""
+
     try:
+        print("🔄 Inicializando sistema...")
+
         # Configuración e inicialización de la base de datos
         db_manager = DatabaseManager()
-
-        # Poblar datos de prueba (opcional - si el método existe)
-        try:
-            if hasattr(db_manager, 'poblar_datos_prueba'):
-                db_manager.poblar_datos_prueba()
-            else:
-                print("⚠️  Método de datos de prueba no disponible")
-        except Exception as e:
-            print(f"⚠️  No se pudieron cargar datos de prueba: {e}")
 
         # Inicializar repositorios
         sala_repo = SalaRepository(db_manager)
@@ -28,12 +22,13 @@ def inicializar_servicios():
 
         # Inicializar servicios con dependencias inyectadas
         reserva_service = ReservaService(reserva_repo, sala_repo, estudiante_repo)
-        sala_service = SalaService(sala_repo)
+        sala_service = SalaService(sala_repo, reserva_service)  # ← Inyectar reserva_service
         estudiante_service = EstudianteService(estudiante_repo)
 
         # Inicializar CLI con servicios
         cli = CLIHandler(reserva_service, estudiante_service, sala_service)
 
+        print("✅ Sistema inicializado correctamente")
         return cli
 
     except Exception as e:
@@ -45,7 +40,8 @@ def inicializar_servicios():
 
 def main():
     """Función principal de la aplicación"""
-    print("🚀 Iniciando Sistema de Gestión de Reservas...")
+    print("🚀 Iniciando Sistema de Gestión de Reservas de la Universidad CUN...")
+    print("📅 " + datetime.now().strftime("%d/%m/%Y %H:%M:%S"))
 
     cli = inicializar_servicios()
 
@@ -61,6 +57,7 @@ def main():
                 cli.manejar_menu_estudiante()
             elif opcion == 3:
                 print("\n🎓 ¡Gracias por usar el Sistema de Gestión de Reservas de la Universidad CUN!")
+                print("👋 ¡Hasta pronto!")
                 break
 
         except KeyboardInterrupt:
@@ -70,11 +67,11 @@ def main():
                 print("👋 ¡Hasta pronto!")
                 break
             else:
-                print("Continuando con la aplicación...")
+                print("🔄 Continuando con la aplicación...")
 
         except Exception as e:
             print(f"\n💥 Error inesperado: {e}")
-            print("El sistema se recuperará y continuará...")
+            print("🔄 El sistema se recuperará y continuará...")
 
 
 if __name__ == "__main__":
